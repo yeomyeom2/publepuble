@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var dbconfig = require('./config/database.js');
 var connection = mysql.createConnection(dbconfig);
 
+var request = require('request');
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -20,6 +22,9 @@ app.post('/chatbot', function(req, res){
     console.log(req.body.events[0].source);
     console.log(req.body.events[0].replyToken);
     console.log(req.body.events[0].message);
+
+    replyMessage(req.body.events[0].replyToken, req.body.events[0].message.text);
+
     /* 요청 텍스트 */
     var text = req.body.events[0].message.text, 
         textSplit = text.split(' '),
@@ -164,6 +169,22 @@ app.post('/chatbot', function(req, res){
 app.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function replyMessage(token, message) {
+    var m = [{
+        "type": "text",
+        "text": "Hello, world" + message
+    }];
+
+    request.post({
+        headers: {'Content-Type':'application/json','Authorization':'Bearer CKuBFnDd9Ti+ccqSBwZjSlTl1B2Un9shhcETq2x6O4k2ptiyCGGCIxPL9hHfV7kMd60FDX9nl5ww2CCN9H6lpYhifpoU35glS0FgK47VAFNWjgdtR6I2UqbvYJu8Totv+sC/pPb3s+Yoxz82GhupDgdB04t89/1O/w1cDnyilFU='},
+        url: 'https://api.line.me/v2/bot/message/reply',
+        body : {'replyToken':token, 'messages':m},
+        json: true
+    },function (error, response, body) {
+        res.json(body);
+    });
+}
 
 /*
 <script>
