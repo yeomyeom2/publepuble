@@ -17,7 +17,9 @@ app.post('/', function(req, res){
 });
 
 app.post('/chatbot', function(req, res){
-    console.log(req.body);
+    console.log(req.body.events[0].source);
+    console.log(req.body.events[0].replyToken);
+    console.log(req.body.events[0].message);
     /* 요청 텍스트 */
     var text = req.body.text, 
         textSplit = text.split(' '),
