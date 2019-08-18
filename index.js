@@ -21,7 +21,7 @@ app.post('/chatbot', function(req, res){
     console.log(req.body.events[0].replyToken);
     console.log(req.body.events[0].message);
     /* 요청 텍스트 */
-    var text = req.body.text, 
+    var text = req.body.events[0].message.text, 
         textSplit = text.split(' '),
         rsv_category = textSplit[1],
         rsv_date = textSplit[2];
