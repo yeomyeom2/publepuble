@@ -17,14 +17,14 @@ app.post('/', function(req, res){
 });
 
 app.post('/chatbot', function(req, res){
-    
+    console.log(req.body);
     /* 요청 텍스트 */
     var text = req.body.text, 
         textSplit = text.split(' '),
         rsv_category = textSplit[1],
         rsv_date = textSplit[2];
 
-console.log(text);
+
 
     /* 날짜 */
     var today = new Date(),
