@@ -57,18 +57,18 @@ app.post('/chatbot', function(req, res){
 
                     //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
                     if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
-                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 0, ' + users[uid] + ')', function(err, result){});
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 0, "' + users[uid] + '")', function(err, result){});
                     }else { //다음 번호의 폴더로 등록
                         if( rows.length == 1) {
                             connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + today, function(err, result){});
                         }
-                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", '+ (rows.length+1) + ', ' + users[uid] + ')', function(err, result){});
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){});
                     }
 
                     
                 });
 
-                connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 99, ' + users[uid] + ')', function(err, result){});
+                connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 99, "' + users[uid] + '")', function(err, result){});
 
                 replyMessage(replyToken, "예약 되었습니다.");
                 res.send("예약 되었습니다.");
