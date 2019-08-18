@@ -93,68 +93,28 @@ app.post('/chatbot', function(req, res){
     }else if(textSplit[0] == '@조회') {
         rsv_date = textSplit[1];
         
-        if(rsv_date == null) { //날짜 입력 X
-            connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '" ORDER BY category DESC, folder ASC', function(err, rows) {
-                if(err) throw err;
+        connection.query('SELECT * from tbl_chatbot WHERE day="' + (rsv_date == null ? today : rsv_date) + '" ORDER BY category DESC, folder ASC', function(err, rows) {
+            if(err) throw err;
 
-                var result = {};
-                var retText = today + '\n';
+            var result = {};
+            var retText = today + '\n';
 
-                for(var d in rows) {
-                    if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
-                    
-                    result[rows[d]['category']].push(rows[d]);
-                }
-
-                for(var d in result) {
-                    retText += " " + d + "\n";
-                    for(var e in result[d]) {
-                        retText += "  " + result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
-                    }
-                }
-
-                replyMessage(replyToken, retText);
-                res.send("");
-/* 
-                var todayArr = [];
-
-                for(var i=0 ; i <= rows.length ; i++) {
-                    //res.send(rows[i]);
-                    console.log(rows[i]);
-                    //todayArr[i] = rows[i];
-                }
-
-                res.send(rows);
-                */
-            });
-        }else if(rsv_date != null) { //날짜 입력 O
-            connection.query('SELECT * from tbl_chatbot WHERE day="' + rsv_date + '" ORDER BY category ASC, folder ASC', function(err, rows) {
-                if(err) throw err;
-
-                var db_result = rows;
-                var result = {};
+            for(var d in rows) {
+                if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
                 
-                for(var d in db_result) {
-                    
-                    // 새로운object result를 만들어서
-                    // 거기에 게임빌, 컴투스가 없으면 (hasOwnProperty 로 체크) result에 게임빌, 컴투스 카테고리를 만듬
-                    // 있는경우는 만들지않음
-                    
-                    if(!result.hasOwnProperty(db_result[d]['category'])) result[db_result[d]['category']] = [];
-                    
-            
-            
-                    // db결과 루프돌면서 카테고리가 일치하는 곳에 아이템 추가
-                
-                    result[db_result[d]['category']].push(db_result[d]);
+                result[rows[d]['category']].push(rows[d]);
+            }
+
+            for(var d in result) {
+                retText += " " + d + "\n";
+                for(var e in result[d]) {
+                    retText += "  " + result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
                 }
-            
+            }
 
-                //console.log(rows[1].category);
-
-                res.send(result);
-            });
-        }
+            replyMessage(replyToken, retText);
+            res.send("");
+        });
     }else if(textSplit[0] == '@취소') {
         if(rsv_date == null) { //날짜 입력 X
             connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '"ORDER BY category ASC, folder ASC', function(err, rows) {
