@@ -65,8 +65,10 @@ app.post('/chatbot', function(req, res){
                         connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", '+ (rows.length+1) + ', ' + users[uid] + ')', function(err, result){});
                     }
 
-                    connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 99, ' + users[uid] + ')', function(err, result){});
+                    
                 });
+
+                connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 99, ' + users[uid] + ')', function(err, result){});
 
                 replyMessage(replyToken, "예약 되었습니다.");
                 res.send("예약 되었습니다.");
@@ -189,7 +191,7 @@ function replyMessage(token, message) {
         body : {'replyToken':token, 'messages':m},
         json: true
     },function (error, response, body) {
-        res.json(body);
+
     });
 }
 
