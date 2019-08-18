@@ -68,8 +68,6 @@ app.post('/chatbot', function(req, res){
                     
                 });
 
-                connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", 99, "' + users[uid] + '")', function(err, result){});
-
                 replyMessage(replyToken, "예약 되었습니다.");
                 res.send("예약 되었습니다.");
             }
