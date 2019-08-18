@@ -19,9 +19,9 @@ app.post('/', function(req, res){
 });
 
 app.post('/chatbot', function(req, res){
-    console.log(req.body.events[0].source);
-    console.log(req.body.events[0].replyToken);
-    console.log(req.body.events[0].message);
+    // console.log(req.body.events[0].source);
+    // console.log(req.body.events[0].replyToken);
+    // console.log(req.body.events[0].message);
 
     var users = {
         'U32195acf313dbd21c064d18647c65f05' : '염혜진'
@@ -92,11 +92,30 @@ app.post('/chatbot', function(req, res){
         }
     }else if(textSplit[0] == '@조회') {
         rsv_date = textSplit[1];
-
+        
         if(rsv_date == null) { //날짜 입력 X
-            connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '" ORDER BY category ASC, folder ASC', function(err, rows) {
+            connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '" ORDER BY category DESC, folder ASC', function(err, rows) {
                 if(err) throw err;
-/*
+
+                var result = {};
+                var retText = today + '\n';
+
+                for(var d in rows) {
+                    if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
+                    
+                    result[rows[d]['category']].push(rows[d]);
+                }
+
+                for(var d in result) {
+                    retText += " " + d + "\n";
+                    for(var e in result[d]) {
+                        retText += "  " + result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
+                    }
+                }
+
+                replyMessage(replyToken, retText);
+                res.send("");
+/* 
                 var todayArr = [];
 
                 for(var i=0 ; i <= rows.length ; i++) {
