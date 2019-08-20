@@ -19,6 +19,7 @@ app.post('/', function(req, res){
 });
 
 app.post('/chatbot', function(req, res){
+
     console.log(req.body.events[0].source);
     console.log(req.body.events[0].replyToken);
     console.log(req.body.events[0].message);
@@ -33,7 +34,8 @@ app.post('/chatbot', function(req, res){
     var replyToken = req.body.events[0].replyToken;
 
     /* 요청 텍스트 */
-    var text = req.body.events[0].message.text, 
+    var text = req.body.events[0].message.text,
+    //var text = req.body.text,
         textSplit = text.split(' '),
         rsv_category = textSplit[1],
         rsv_date = textSplit[2];
@@ -65,15 +67,15 @@ app.post('/chatbot', function(req, res){
                         }
                         connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){});
                     }
-
                     
                 });
 
-                replyMessage(replyToken, rsv_category + (rows.length+1) + "번 예약 되었습니다.");
+                //replyMessage(replyToken, rsv_category + (rows.length+1) + "번 예약 되었습니다.");
+                console.log(rsv_category + (rows.length+1) + "번 예약 되었습니다.")
                 res.send("예약 되었습니다.");
             }
         }else {
-            res.send("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약게임빌<br><br>@조회<br><br>@취소");
+            res.send("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약게임빌<br><br>@조회");
         }
     }else if(textSplit[0] == '@조회') {
         rsv_date = textSplit[1];
@@ -93,7 +95,7 @@ app.post('/chatbot', function(req, res){
             for(var d in result) {
                 retText += d + "\n";
                 for(var e in result[d]) {
-                    retText += "  " + result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
+                    retText += result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
                 }
             }
 
