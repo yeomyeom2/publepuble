@@ -59,7 +59,21 @@ app.post('/chatbot', function(req, res){
                 //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
                 if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
-                        resultInquiry();
+                        var result = {};
+                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+
+                        for(var d in rows) {
+                            if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
+                            
+                            result[rows[d]['category']].push(rows[d]);
+                        }
+
+                        for(var d in result) {
+                            retText += d + "\n\n";
+                            for(var e in result[d]) {
+                                retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
+                            }
+                        }
                     });
 
                     replyMessage(replyToken, retText);
@@ -70,7 +84,21 @@ app.post('/chatbot', function(req, res){
                         connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
                     }
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
-                        resultInquiry();
+                        var result = {};
+                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+
+                        for(var d in rows) {
+                            if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
+                            
+                            result[rows[d]['category']].push(rows[d]);
+                        }
+
+                        for(var d in result) {
+                            retText += d + "\n\n";
+                            for(var e in result[d]) {
+                                retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
+                            }
+                        }
                     });
                     
                     replyMessage(replyToken, retText);
@@ -91,7 +119,21 @@ app.post('/chatbot', function(req, res){
         connection.query('SELECT * from tbl_chatbot WHERE day="' + (rsv_date == null ? today : rsv_date) + '" ORDER BY category DESC, folder ASC', function(err, rows) {
             if(err) throw err;
 
-            resultInquiry();
+            var result = {};
+            var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+
+            for(var d in rows) {
+                if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
+                
+                result[rows[d]['category']].push(rows[d]);
+            }
+
+            for(var d in result) {
+                retText += d + "\n\n";
+                for(var e in result[d]) {
+                    retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
+                }
+            }
 
             replyMessage(replyToken, retText);
             res.send("");
