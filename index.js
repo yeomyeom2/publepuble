@@ -69,7 +69,7 @@ app.post('/chatbot', function(req, res){
                         }
 
                         for(var d in result) {
-                            retText += "\n [" + d + "]\n";
+                            retText += "\n[" + d + "]\n";
                             for(var e in result[d]) {
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
@@ -94,7 +94,7 @@ app.post('/chatbot', function(req, res){
                         }
 
                         for(var d in result) {
-                            retText += "\n [" + d + "]\n";
+                            retText += "\n[" + d + "]\n";
                             for(var e in result[d]) {
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
@@ -129,7 +129,7 @@ app.post('/chatbot', function(req, res){
             }
 
             for(var d in result) {
-                retText += "\n [" + d + "]\n";
+                retText += "\n[" + d + "]\n";
                 for(var e in result[d]) {
                     retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                 }
