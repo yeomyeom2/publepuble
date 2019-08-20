@@ -74,9 +74,10 @@ app.post('/chatbot', function(req, res){
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
                         }
+
+                        replyMessage(replyToken, retText);
                     });
 
-                    replyMessage(replyToken, retText);
                     //replyMessage(replyToken, users[uid] + " - " + rsv_category + " 통으로 예약 되었습니다.");
                     res.send("통으로 예약 되었습니다.");
                 }else { //다음 번호의 폴더로 등록
@@ -99,9 +100,10 @@ app.post('/chatbot', function(req, res){
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
                         }
+
+                        replyMessage(replyToken, retText);
                     });
-                    
-                    replyMessage(replyToken, retText);
+
                     //replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
                     res.send("예약 되었습니다.");
                 }
