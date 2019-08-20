@@ -20,8 +20,8 @@ app.post('/', function(req, res){
 
 app.post('/chatbot', function(req, res){
     // console.log(req.body.events[0].source);
-    // console.log(req.body.events[0].replyToken);
-    // console.log(req.body.events[0].message);
+    console.log(req.body.events[0].replyToken);
+    console.log(req.body.events[0].message);
 
     var users = {
         'U32195acf313dbd21c064d18647c65f05' : '염혜진'
@@ -135,21 +135,6 @@ app.post('/chatbot', function(req, res){
     }else {
         res.send("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약 게임빌<br><br>@조회 날짜<br><br>@취소");
     }
-    
-
-/*
-  connection.query('SELECT * from tbl_chatbot', function(err, rows) {
-    if(err) throw err;
-    console.log('The solution is: ', rows);
-    var category = req.body.categroy;
-    //res.send(category);
-
-     
-  console.log(category);
-
-  });
-
- */
 });
 
 app.listen(app.get('port'), function () {
@@ -159,7 +144,7 @@ app.listen(app.get('port'), function () {
 function replyMessage(token, message) {
     var m = [{
         "type": "text",
-        "text": "Hello, world" + message
+        "text": message
     }];
 
     request.post({
@@ -171,41 +156,3 @@ function replyMessage(token, message) {
 
     });
 }
-
-/*
-<script>
-
-   var db_result = [
-     { id: 14, category: '게임빌', day: '0702', folder: 1, name: null },
-     { id: 15, category: '게임빌', day: '0702', folder: 2, name: null },
-     { id: 16, category: '게임빌', day: '0702', folder: 3, name: null },
-     { id: 17, category: '게임빌', day: '0702', folder: 4, name: null },
-     { id: 18, category: '게임빌', day: '0702', folder: 5, name: null },
-     { id: 7, category: '컴투스', day: '0702', folder: 1, name: null },
-     { id: 9, category: '컴투스', day: '0702', folder: 2, name: null },
-     { id: 10, category: '컴투스', day: '0702', folder: 3, name: null },
-     { id: 11, category: '컴투스', day: '0702', folder: 4, name: null },
-     { id: 12, category: '컴투스', day: '0702', folder: 5, name: null },
-     { id: 19, category: '컴투스', day: '0702', folder: 6, name: null } 
-   ];
-   
-   var result = {};
-   
-   for(var d in db_result) {
-      
-      // 새로운object result를 만들어서
-      // 거기에 게임빌, 컴투스가 없으면 (hasOwnProperty 로 체크) result에 게임빌, 컴투스 카테고리를 만듬
-      // 있는경우는 만들지않음
-      
-      if(!result.hasOwnProperty(db_result[d]['category'])) result[db_result[d]['category']] = [];
-      
-
-
-      // db결과 루프돌면서 카테고리가 일치하는 곳에 아이템 추가
-   
-      result[db_result[d]['category']].push(db_result[d]);
-   }
-
-   console.log(result);
-</script>
-*/
