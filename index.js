@@ -60,7 +60,7 @@ app.post('/chatbot', function(req, res){
                 if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){});
 
-                    replyMessage(replyToken, rsv_category + " 통으로 예약 되었습니다.");
+                    replyMessage(replyToken, users[uid] + " - " + rsv_category + " 통으로 예약 되었습니다.");
                     res.send("통으로 예약 되었습니다.");
                 }else { //다음 번호의 폴더로 등록
                     if( rows.length == 1) {
@@ -69,7 +69,7 @@ app.post('/chatbot', function(req, res){
                     }
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){});
                     
-                    replyMessage(replyToken, rsv_category + " " + users[uid] + " " + (rows.length+1) + "번 예약 되었습니다.");
+                    replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
                     res.send("예약 되었습니다.");
                 }
                 
