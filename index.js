@@ -69,7 +69,7 @@ app.post('/chatbot', function(req, res){
                     }
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){});
                     
-                    replyMessage(replyToken, rsv_category + (rows.length+1) + "번 예약 되었습니다.");
+                    replyMessage(replyToken, rsv_category + " " + users[uid] + " " + (rows.length+1) + "번 예약 되었습니다.");
                     res.send("예약 되었습니다.");
                 }
                 
@@ -87,7 +87,7 @@ app.post('/chatbot', function(req, res){
             if(err) throw err;
 
             var result = {};
-            var retText = today + '\n';
+            var retText = (rsv_date == null ? today : rsv_date) + '\n\n';
 
             for(var d in rows) {
                 if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -98,7 +98,7 @@ app.post('/chatbot', function(req, res){
             for(var d in result) {
                 retText += d + "\n";
                 for(var e in result[d]) {
-                    retText += result[d][e]['folder'] + ' - ' + result[d][e]['name'] + '\n';
+                    retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                 }
             }
 
