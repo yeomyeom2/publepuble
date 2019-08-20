@@ -19,7 +19,7 @@ app.post('/', function(req, res){
 });
 
 app.post('/chatbot', function(req, res){
-    // console.log(req.body.events[0].source);
+    console.log(req.body.events[0].source);
     console.log(req.body.events[0].replyToken);
     console.log(req.body.events[0].message);
 
