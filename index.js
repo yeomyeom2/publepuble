@@ -69,7 +69,6 @@ app.post('/chatbot', function(req, res){
             });
 
                     replyMessage(replyToken, "번 예약 되었습니다.");
-                    console.log("폴더 개수 : " +rows.length)
                     res.send("예약 되었습니다.");
 
         }else {
