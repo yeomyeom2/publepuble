@@ -60,7 +60,7 @@ app.post('/chatbot', function(req, res){
                 if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
                         var result = {};
-                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n\n';
 
                         for(var d in rows) {
                             if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -69,7 +69,7 @@ app.post('/chatbot', function(req, res){
                         }
 
                         for(var d in result) {
-                            retText += d + "\n\n";
+                            retText += d + "\n";
                             for(var e in result[d]) {
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
@@ -85,7 +85,7 @@ app.post('/chatbot', function(req, res){
                     }
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
                         var result = {};
-                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+                        var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n\n';
 
                         for(var d in rows) {
                             if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -94,7 +94,7 @@ app.post('/chatbot', function(req, res){
                         }
 
                         for(var d in result) {
-                            retText += d + "\n\n";
+                            retText += d + "\n";
                             for(var e in result[d]) {
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
@@ -120,7 +120,7 @@ app.post('/chatbot', function(req, res){
             if(err) throw err;
 
             var result = {};
-            var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+            var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n\n';
 
             for(var d in rows) {
                 if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -129,7 +129,7 @@ app.post('/chatbot', function(req, res){
             }
 
             for(var d in result) {
-                retText += d + "\n\n";
+                retText += d + "\n";
                 for(var e in result[d]) {
                     retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                 }
