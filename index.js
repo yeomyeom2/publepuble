@@ -66,7 +66,8 @@ app.post('/chatbot', function(req, res){
                             connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + today, function(err, result){});
                         }
                         connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + today + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){});
-                        replyMessage(replyToken, rsv_category + (rows.length+1) + "번 예약 되었습니다.");
+                        //replyMessage(replyToken, rsv_category + (rows.length+1) + "번 예약 되었습니다.");
+                        console.log(rows.length)
                         res.send("예약 되었습니다.");
                     }
                     
