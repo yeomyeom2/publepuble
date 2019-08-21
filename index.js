@@ -20,10 +20,10 @@ app.post('/', function(req, res){
 
 app.post('/chatbot', function(req, res){
 
-    console.log(req.body.events[0].source);
-    console.log(req.body.events[0].replyToken);
-    console.log(req.body.events[0].message);
-    console.log(req.body.events[0].source.userId);
+    //console.log(req.body.events[0].source);
+    //console.log(req.body.events[0].replyToken);
+    //console.log(req.body.events[0].message);
+    //console.log(req.body.events[0].source.userId);
 
     var users = {
         'U32195acf313dbd21c064d18647c65f05' : '염혜진',
