@@ -63,6 +63,7 @@ app.post('/chatbot', function(req, res){
                 //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
                 if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
+                        /*
                         var result = {};
                         var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
 
@@ -78,8 +79,10 @@ app.post('/chatbot', function(req, res){
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
                         }
+                        */
 
-                        replyMessage(replyToken, retText);
+                        //replyMessage(replyToken, retText);
+                        replyMessage(replyToken, users[uid] + " - " + rsv_category + " 통으로 예약 되었습니다.");
                     });
 
                     //replyMessage(replyToken, users[uid] + " - " + rsv_category + " 통으로 예약 되었습니다.");
@@ -89,6 +92,7 @@ app.post('/chatbot', function(req, res){
                         connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
                     }
                     connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
+                        /*
                         var result = {};
                         var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
 
@@ -104,8 +108,10 @@ app.post('/chatbot', function(req, res){
                                 retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
                             }
                         }
+                        */
 
-                        replyMessage(replyToken, retText);
+                       replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
+                        //replyMessage(replyToken, retText);
                     });
 
                     //replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
