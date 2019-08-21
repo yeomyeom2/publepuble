@@ -27,7 +27,12 @@ app.post('/chatbot', function(req, res){
 
     var users = {
         'U32195acf313dbd21c064d18647c65f05' : '염혜진',
-        'U3fa6149a2759af7d5f738ce0642eeaf9' : '이지원'
+        'U3fa6149a2759af7d5f738ce0642eeaf9' : '이지원',
+        'Ude13e829165d6ae4777aa0a89147eb64' : '권성수',
+        'U345dc90a4ab459eda6590f73a3e72627' : '백재욱',
+        'U665f5ccfbade255cd6e780e97e8c0253' : '김상호',
+        'U4bfb42cf2a76945e1cddf89b0e3b7c28' : '이승제',
+        'Uc6e5da89664a582daa6af1ae41b3b397' : '곽선민'
     };
 
     var uid = req.body.events[0].source.userId;
@@ -35,7 +40,6 @@ app.post('/chatbot', function(req, res){
 
     /* 요청 텍스트 */
     var text = req.body.events[0].message.text,
-    //var text = req.body.text,
         textSplit = text.split(' '),
         rsv_category = textSplit[1],
         rsv_date = textSplit[2];
