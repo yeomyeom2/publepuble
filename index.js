@@ -95,7 +95,7 @@ app.post('/chatbot', function(req, res){
                 if(err) throw err;
 
                 var result = {};
-                var retText = (rsv_date == null ? today : rsv_date) + '\n';
+                var retText = (rsv_date == null ? today : rsv_date);
 
                 for(var d in rows) {
                     if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -104,7 +104,7 @@ app.post('/chatbot', function(req, res){
                 }
 
                 for(var d in result) {
-                    retText += "\n[" + d + "]";
+                    retText += "\n\n[" + d + "]";
                     for(var e in result[d]) {
                         retText +=  '\n' + result[d][e]['folder'] + '번 : ' + result[d][e]['name'];
                     }
