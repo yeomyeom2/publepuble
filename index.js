@@ -22,7 +22,7 @@ app.post('/chatbot', function(req, res){
 
     //console.log(req.body.events[0].source);
     //console.log(req.body.events[0].replyToken);
-    console.log(req.body.events[0].message.type);
+    //console.log(req.body.events[0].message.type);
     //console.log(req.body.events[0].message.text);
     //console.log(req.body.events[0].source.userId);
 
@@ -66,16 +66,17 @@ app.post('/chatbot', function(req, res){
                     //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
                     if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
                         connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
-                            //replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ')' : rsv_date) + rsv_category + " 폴더 통으로 예약 되었습니다.");
-                            replyMessage(replyToken, users[uid] + " - " + (rsv_date == '0000' ? '오늘(' + today + ')' : rsv_date) + rsv_category + " 폴더 통으로 예약 되었습니다.");
+                            replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 폴더 통으로 예약 되었습니다.");
                         });
                         res.send("");
                     }else { //다음 번호의 폴더로 등록
                         if( rows.length == 1) {
-                            connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
+                            connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == '0000' ? today : rsv_date), function(err, result){
+                                replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
+                            });
                         }
-                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
-                            replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == '0000' ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
+                            replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
                         });
 
                         res.send("예약 되었습니다.");
