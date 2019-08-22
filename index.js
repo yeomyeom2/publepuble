@@ -72,10 +72,12 @@ app.post('/chatbot', function(req, res){
                     }else { //다음 번호의 폴더로 등록
                         if( rows.length == 1) {
                             connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == '0000' ? today : rsv_date), function(err, result){
-                                replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
+                                var txtChange = users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.";
+                                //replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
                             });
                         }
                         connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == '0000' ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
+                            console.log(txtChange);
                             replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
                         });
 
