@@ -40,10 +40,12 @@ app.post('/chatbot', function(req, res){
     var replyToken = req.body.events[0].replyToken;
 
     /* 요청 텍스트 */
-    var text = req.body.events[0].message.text,
-        textSplit = text.split(' '),
-        rsv_category = textSplit[1],
-        rsv_date = textSplit[2];
+    if(req.body.events[0].message.type == 'text') {
+        var text = req.body.events[0].message.text,
+            textSplit = text.split(' '),
+            rsv_category = textSplit[1],
+            rsv_date = textSplit[2];
+    }
 
     /* 날짜 */
     var today = new Date(),
