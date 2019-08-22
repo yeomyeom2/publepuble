@@ -71,13 +71,10 @@ app.post('/chatbot', function(req, res){
                         res.send("");
                     }else { //다음 번호의 폴더로 등록
                         if( rows.length == 1) {
-                            connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == '0000' ? today : rsv_date), function(err, result){
-                                var txtChange = users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.";
-                                //replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
-                            });
+                            connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
                         }
-                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == '0000' ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
-                            console.log(txtChange);
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
+                            //var txtChange = replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
                             replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
                         });
 
@@ -98,7 +95,7 @@ app.post('/chatbot', function(req, res){
                 if(err) throw err;
 
                 var result = {};
-                var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
+                var retText = (rsv_date == '0002' ? '오늘(' + today + ')' : rsv_date) + '\n';
 
                 for(var d in rows) {
                     if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
@@ -107,9 +104,9 @@ app.post('/chatbot', function(req, res){
                 }
 
                 for(var d in result) {
-                    retText += "\n[" + d + "]\n";
+                    retText += "\n[" + d + "]";
                     for(var e in result[d]) {
-                        retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
+                        retText +=  '\n' + result[d][e]['folder'] + '번 : ' + result[d][e]['name'];
                     }
                 }
 
