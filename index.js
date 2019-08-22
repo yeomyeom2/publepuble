@@ -45,6 +45,8 @@ app.post('/chatbot', function(req, res){
             textSplit = text.split(' '),
             rsv_category = textSplit[1],
             rsv_date = textSplit[2];
+
+            console.log('나오냐')
     }
 
     /* 날짜 */
