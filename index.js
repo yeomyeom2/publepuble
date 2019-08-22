@@ -95,7 +95,7 @@ app.post('/chatbot', function(req, res){
                 if(err) throw err;
 
                 var result = {};
-                var retText = (rsv_date == null ? '오늘(' + today + ')' : rsv_date) + '\n';
+                var retText = (rsv_date == null ? today : rsv_date) + '\n';
 
                 for(var d in rows) {
                     if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
