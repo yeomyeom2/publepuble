@@ -11,10 +11,10 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-console.log(111)
 // configuration ===============================================================
 app.set('port', process.env.PORT || 80);
 
+console.log(222)
 app.post('/', function(req, res){
   res.send('Root');
 });
