@@ -22,7 +22,8 @@ app.post('/chatbot', function(req, res){
 
     //console.log(req.body.events[0].source);
     //console.log(req.body.events[0].replyToken);
-    //console.log(req.body.events[0].message);
+    //console.log(req.body.events[0].message.type);
+    //console.log(req.body.events[0].message.text);
     //console.log(req.body.events[0].source.userId);
 
     var users = {
@@ -38,12 +39,6 @@ app.post('/chatbot', function(req, res){
     var uid = req.body.events[0].source.userId;
     var replyToken = req.body.events[0].replyToken;
 
-    /* 요청 텍스트 */
-    var text = req.body.events[0].message.text,
-        textSplit = text.split(' '),
-        rsv_category = textSplit[1],
-        rsv_date = textSplit[2];
-
     /* 날짜 */
     var today = new Date(),
         month = today.getMonth()+1,
@@ -54,78 +49,90 @@ app.post('/chatbot', function(req, res){
 
     today = month + day;
     /* //날짜 */
+
+    /* 요청 텍스트 */
+    if(req.body.events[0].message.type == 'text') {
+        var text = req.body.events[0].message.text,
+            textSplit = text.split(' '),
+            rsv_category = textSplit[1],
+            rsv_date = textSplit[2];
+
     
-    if(textSplit[0] == '@예약') {
-        if(rsv_category == '컴투스' || rsv_category == '게임빌' || rsv_category == 'etc') {
-            connection.query('SELECT * from tbl_chatbot WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, rows) {
-                if(err) throw err;
+        if(textSplit[0] == '@예약') {
+            if(rsv_category == '컴투스' || rsv_category == '게임빌' || rsv_category == 'etc') {
+                connection.query('SELECT * from tbl_chatbot WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, rows) {
+                    if(err) throw err;
 
-                //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
-                if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
-                    connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
-                        replyMessage(replyToken, users[uid] + " - " + rsv_category + " 통으로 예약 되었습니다.");
+                    //폴더가 몇 개 있는지 계산한 후 -> 폴더가 없으면 통으로, 있으면 그 다음 번호로
+                    if(rows.length == 0) { //폴더가 없는 경우 통으로 사용
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", 0, "' + users[uid] + '")', function(err, result){
+                            replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 폴더 통으로 예약 되었습니다.");
+                        });
                         res.send("");
-                    });
-                }else { //다음 번호의 폴더로 등록
-                    if( rows.length == 1) {
-                        connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
+                    }else { //다음 번호의 폴더로 등록
+                        if( rows.length == 1) {
+                            connection.query('UPDATE tbl_chatbot SET folder = "1" WHERE category="' + rsv_category + '" AND day=' + (rsv_date == null ? today : rsv_date), function(err, result){});
+                        }
+                        connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
+                            //var txtChange = replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " 1번으로 변경 되었습니다.");
+                            replyMessage(replyToken, users[uid] + " - " + (rsv_date == null ? '오늘(' + today + ') ' : rsv_date + ' ') + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
+                        });
+
+                        res.send("예약 되었습니다.");
                     }
-                    connection.query('INSERT INTO tbl_chatbot (category, day, folder, name) VALUES ("' + rsv_category + '", "' + (rsv_date == null ? today : rsv_date) + '", '+ (rows.length+1) + ', "' + users[uid] + '")', function(err, result){
-                       replyMessage(replyToken, users[uid] + " - " + rsv_category + " " + (rows.length+1) + "번 예약 되었습니다.");
-                    });
-                    res.send("예약 되었습니다.");
+                    
+                });
+
+
+            }else {
+                //replyMessage("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약게임빌<br><br>@조회");
+                res.send("");
+            }
+        }else if(textSplit[0] == '@조회') {
+            rsv_date = textSplit[1];
+            
+            connection.query('SELECT * from tbl_chatbot WHERE day="' + (rsv_date == null ? today : rsv_date) + '" ORDER BY category DESC, folder ASC', function(err, rows) {
+                if(err) throw err;
+
+                var result = {};
+                var retText = (rsv_date == null ? '오늘(' + today + ')' : rsv_date);
+
+                for(var d in rows) {
+                    if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
+                    
+                    result[rows[d]['category']].push(rows[d]);
                 }
+
+                for(var d in result) {
+                    retText += "\n\n[" + d + "]";
+                    for(var e in result[d]) {
+                        retText +=  '\n' + result[d][e]['folder'] + '번 : ' + result[d][e]['name'];
+                    }
+                }
+
+                replyMessage(replyToken, retText);
+                res.send("");
             });
+        }else if(textSplit[0] == '@취소') {
+            if(rsv_date == null) { //날짜 입력 X
+                connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '"ORDER BY category ASC, folder ASC', function(err, rows) {
+                    if(err) throw err;
 
+                    for(var i=0 ; i <= rows.length ; i++) {
+                        //res.send(rows[i]);
+                        console.log('오늘 <br>컴투스'+rows[i]);
+                    }
+                });
+            }else if(rsv_date != null) { //날짜 입력 O
+                connection.query('SELECT * from tbl_chatbot WHERE day=' + rsv_date, function(err, rows) {
+                    if(err) throw err;
 
+                    res.send(rows);
+                });
+            }
         }else {
-            replyMessage("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약게임빌<br><br>@조회");
-            res.send("");
+            res.send("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약 게임빌<br><br>@조회 날짜<br><br>@취소");
         }
-    }else if(textSplit[0] == '@조회') {
-        rsv_date = textSplit[1];
-        
-        connection.query('SELECT * from tbl_chatbot WHERE day="' + (rsv_date == null ? today : rsv_date) + '" ORDER BY category DESC, folder ASC', function(err, rows) {
-            if(err) throw err;
-
-            var result = {};
-            var retText = (rsv_date == null ? '오늘' : rsv_date) + '\n';
-
-            for(var d in rows) {
-                if(!result.hasOwnProperty(rows[d]['category'])) result[rows[d]['category']] = [];
-                
-                result[rows[d]['category']].push(rows[d]);
-            }
-
-            for(var d in result) {
-                retText += "\n[" + d + "]\n";
-                for(var e in result[d]) {
-                    retText += result[d][e]['folder'] + '번 : ' + result[d][e]['name'] + '\n';
-                }
-            }
-
-            replyMessage(replyToken, retText);
-            res.send("");
-        });
-    }else if(textSplit[0] == '@취소') {
-        if(rsv_date == null) { //날짜 입력 X
-            connection.query('SELECT * from tbl_chatbot WHERE day="' + today + '"ORDER BY category ASC, folder ASC', function(err, rows) {
-                if(err) throw err;
-
-                for(var i=0 ; i <= rows.length ; i++) {
-                    //res.send(rows[i]);
-                    console.log('오늘 <br>컴투스'+rows[i]);
-                }
-            });
-        }else if(rsv_date != null) { //날짜 입력 O
-            connection.query('SELECT * from tbl_chatbot WHERE day=' + rsv_date, function(err, rows) {
-                if(err) throw err;
-
-                res.send(rows);
-            });
-        }
-    }else {
-        res.send("올바른 명령어를 입력해주세요.<br><br>명령어 목록 :<br>@예약 컴투스<br>@예약 게임빌<br><br>@조회 날짜<br><br>@취소");
     }
 });
 
