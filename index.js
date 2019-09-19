@@ -14,7 +14,6 @@ app.use(bodyParser.urlencoded({extended:true}));
 // configuration ===============================================================
 app.set('port', process.env.PORT || 80);
 
-console.log(222)
 app.post('/', function(req, res){
   res.send('Root');
 });
