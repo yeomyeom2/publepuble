@@ -20,7 +20,7 @@ app.post('/', function(req, res){
 
 app.post('/chatbot', function(req, res){
 
-    //console.log(req.body.events[0].source, req.body.events[0].replyToken, req.body.events[0].message.type, req.body.events[0].message.text, req.body.events[0].source.userId);
+    console.log(req.body.events[0].source, req.body.events[0].replyToken, req.body.events[0].message.type, req.body.events[0].message.text, req.body.events[0].source.userId);
     //console.log(req.body.events[0].source);
     //console.log(req.body.events[0].replyToken);
     //console.log(req.body.events[0].message.type);
