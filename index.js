@@ -17,9 +17,10 @@ app.set('port', process.env.PORT || 80);
 app.post('/', function(req, res){
   res.send('Root');
 });
-
+console.log(1)
 app.post('/chatbot', function(req, res){
     
+console.log(2)
     //console.log(req.body.events[0].source, req.body.events[0].replyToken, req.body.events[0].message.type, req.body.events[0].message.text, req.body.events[0].source.userId);
     //console.log(req.body.events[0].source);
     //console.log(req.body.events[0].replyToken);
