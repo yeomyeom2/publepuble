@@ -49,6 +49,7 @@ app.post('/chatbot', function(req, res){
     day = day >= 10 ? day : '0' + day;
 
     today = String(month) + String(day);
+    console.log(today)
     /* //날짜 */
 
     /* 요청 텍스트 */
