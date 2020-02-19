@@ -20,7 +20,7 @@ app.post('/', function(req, res){
 
 app.post('/chatbot', function(req, res){
 
-    console.log(req.body.events[0].source, req.body.events[0].replyToken, req.body.events[0].message.type, req.body.events[0].message.text, req.body.events[0].source.userId);
+    //console.log(req.body.events[0].source, req.body.events[0].replyToken, req.body.events[0].message.type, req.body.events[0].message.text, req.body.events[0].source.userId);
     //console.log(req.body.events[0].source);
     //console.log(req.body.events[0].replyToken);
     //console.log(req.body.events[0].message.type);
@@ -34,7 +34,8 @@ app.post('/chatbot', function(req, res){
         'U345dc90a4ab459eda6590f73a3e72627' : '백재욱',
         'U665f5ccfbade255cd6e780e97e8c0253' : '김상호',
         'U4bfb42cf2a76945e1cddf89b0e3b7c28' : '이승제',
-        'Uc6e5da89664a582daa6af1ae41b3b397' : '곽선민'
+        'Uc6e5da89664a582daa6af1ae41b3b397' : '곽선민',
+        'U80a05002ba042eca173050115f4b56bb' : '최현선'
     };
 
     var uid = req.body.events[0].source.userId;
